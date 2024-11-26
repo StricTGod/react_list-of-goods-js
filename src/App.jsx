@@ -21,7 +21,7 @@ const sortGoods = (goods, params) => {
   const copyGoods = [...goods];
   const { sortedBy, isReversed } = params;
 
-  if (sortedBy.length) {
+  if (sortedBy !== '') {
     copyGoods.sort((good1, good2) => {
       switch (sortedBy) {
         case 'byAlphabet':
@@ -89,7 +89,7 @@ export const App = () => {
         <button
           onClick={() => {
             setIsReversed(!isReversed);
-            setHasChanged(sortedBy || !isReversed);
+            setHasChanged(sortedBy !== '' || !isReversed);
           }}
           type="button"
           className={classNames('button', 'is-info', {
