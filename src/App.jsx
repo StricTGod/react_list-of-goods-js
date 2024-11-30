@@ -17,16 +17,21 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_BY_FIELDS = {
+  alphabet: 'byAlphabet',
+  length: 'byLength',
+};
+
 const sortGoods = (goods, params) => {
   const copyGoods = [...goods];
   const { sortedBy, isReversed } = params;
 
-  if (sortedBy !== '') {
+  if (sortedBy) {
     copyGoods.sort((good1, good2) => {
       switch (sortedBy) {
-        case 'byAlphabet':
+        case SORT_BY_FIELDS.alphabet:
           return good1.localeCompare(good2);
-        case 'byLength':
+        case SORT_BY_FIELDS.length:
           return good1.length - good2.length;
         default:
           return 0;
@@ -44,12 +49,12 @@ const sortGoods = (goods, params) => {
 export const App = () => {
   const [sortedBy, setSortedBy] = useState('');
   const [isReversed, setIsReversed] = useState(false);
-  const [hasChanged, setHasChanged] = useState(false);
+
+  const hasChanged = Boolean(sortedBy || isReversed);
 
   const handleReset = () => {
     setSortedBy('');
     setIsReversed(false);
-    setHasChanged(false);
   };
 
   const sortedGoods = sortGoods(goodsFromServer, {
@@ -62,12 +67,11 @@ export const App = () => {
       <div className="buttons">
         <button
           onClick={() => {
-            setSortedBy('byAlphabet');
-            setHasChanged(true);
+            setSortedBy(SORT_BY_FIELDS.alphabet);
           }}
           type="button"
           className={classNames('button', 'is-info', {
-            'is-light': sortedBy !== 'byAlphabet',
+            'is-light': sortedBy !== SORT_BY_FIELDS.alphabet,
           })}
         >
           Sort alphabetically
@@ -75,12 +79,11 @@ export const App = () => {
 
         <button
           onClick={() => {
-            setSortedBy('byLength');
-            setHasChanged(true);
+            setSortedBy(SORT_BY_FIELDS.length);
           }}
           type="button"
-          className={classNames('button', 'is-info', {
-            'is-light': sortedBy !== 'byLength',
+          className={classNames('button', 'is-success', {
+            'is-light': sortedBy !== SORT_BY_FIELDS.length,
           })}
         >
           Sort by length
@@ -89,10 +92,9 @@ export const App = () => {
         <button
           onClick={() => {
             setIsReversed(!isReversed);
-            setHasChanged(sortedBy !== '' || !isReversed);
           }}
           type="button"
-          className={classNames('button', 'is-info', {
+          className={classNames('button', 'is-warning', {
             'is-light': !isReversed,
           })}
         >
